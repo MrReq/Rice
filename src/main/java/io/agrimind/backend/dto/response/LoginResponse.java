@@ -1,0 +1,14 @@
+package io.agrimind.backend.dto.response;
+
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class LoginResponse {
+
+    private String token;
+
+    private String type;
+
+}
