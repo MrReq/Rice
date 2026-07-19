@@ -1,6 +1,7 @@
 package io.agrimind.backend.security;
 
 import io.agrimind.backend.service.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +41,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String jwt = authHeader.substring(7);
 
-        String username = jwtService.extractUsername(jwt);
+        String username;
+        try {
+            username = jwtService.extractUsername(jwt);
+        } catch (ExpiredJwtException e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         System.out.println("JWT username: " + username);
 
         if (username != null
@@ -69,8 +76,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 System.out.println("Authenticated!");
             }
         }
-        filterChain.doFilter(request, response);
-        // <<< TO MUSI BYĆ ZAWSZE
         filterChain.doFilter(request, response);
     }
 }

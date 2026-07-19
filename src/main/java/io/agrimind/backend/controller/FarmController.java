@@ -1,12 +1,12 @@
 package io.agrimind.backend.controller;
 
 import io.agrimind.backend.dto.request.CreateFarmRequest;
+import io.agrimind.backend.dto.request.UpdateFarmRequest;
 import io.agrimind.backend.dto.response.FarmResponse;
 import io.agrimind.backend.service.FarmService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,18 +19,36 @@ public class FarmController {
     private final FarmService farmService;
 
     @PostMapping
-    public ResponseEntity<FarmResponse> createFarm(
-            @RequestParam Long ownerId,
+    @ResponseStatus(HttpStatus.CREATED)
+    public FarmResponse createFarm(
             @Valid @RequestBody CreateFarmRequest request) {
 
-        FarmResponse response = farmService.createFarm(ownerId, request);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return farmService.createFarm(request);
     }
-    @GetMapping
-    public ResponseEntity<List<FarmResponse>> getUserFarms(
-            @RequestParam Long ownerId) {
 
-        return ResponseEntity.ok(farmService.getUserFarms(ownerId));
+    @GetMapping
+    public List<FarmResponse> getMyFarms() {
+
+        System.out.println("GET /api/farms");
+
+        return farmService.getMyFarms();
+    }
+    @GetMapping("/{id}")
+    public FarmResponse getFarmById(@PathVariable Long id) {
+
+        return farmService.getFarmById(id);
+    }
+    @PutMapping("/{id}")
+    public FarmResponse updateFarm(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateFarmRequest request) {
+
+        return farmService.updateFarm(id, request);
+    }
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteFarm(@PathVariable Long id) {
+
+        farmService.deleteFarm(id);
     }
 }

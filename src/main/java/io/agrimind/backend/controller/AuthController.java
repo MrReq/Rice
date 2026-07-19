@@ -26,7 +26,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
-
+        System.out.println("Login attempt: " + request.getEmail());
+        System.out.println("Login successful");
         return authService.login(request);
 
     }

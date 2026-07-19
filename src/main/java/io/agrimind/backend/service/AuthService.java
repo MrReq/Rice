@@ -28,22 +28,29 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest request) {
 
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                request.getEmail(),
-                                request.getPassword()
-                        )
-                );
+        try {
+            Authentication authentication =
+                    authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    request.getEmail(),
+                                    request.getPassword()
+                            )
+                    );
 
-        UserDetails userDetails =
-                (UserDetails) authentication.getPrincipal();
+            System.out.println("Authentication OK");
 
-        String token = jwtService.generateToken(userDetails);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        return LoginResponse.builder()
-                .token(token)
-                .type("Bearer")
-                .build();
+            String token = jwtService.generateToken(userDetails);
+
+            return LoginResponse.builder()
+                    .token(token)
+                    .type("Bearer")
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }
