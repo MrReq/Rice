@@ -1,19 +1,17 @@
 package io.agrimind.backend.repository;
 
+import io.agrimind.backend.entity.Field;
 import io.agrimind.backend.entity.Farm;
-import io.agrimind.backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
 import java.util.Optional;
 
 @Repository
-public interface FarmRepository extends JpaRepository<Farm, Long> {
+public interface FieldRepository extends JpaRepository<Field, Long> {
 
-    List<Farm> findByOwner(User owner);
+    List<Field> findByFarm(Farm farm);
 
-    Optional<Farm> findByIdAndOwner(Long id, User owner);
-
+    Optional<Field> findByIdAndFarm(Long id, Farm farm);
 }
